@@ -82,9 +82,23 @@
 
         <div class="list-heading">
           <h2>これまでの記録</h2>
+        </div>
+        <div class="entry-filters">
           <label class="search-field">
             <span class="sr-only">記録を検索</span>
             <input id="entry-search" type="search" placeholder="記録を検索">
+          </label>
+          <label class="filter-field">
+            <span class="sr-only">気持ちで絞り込む</span>
+            <select id="entry-mood-filter" aria-label="気持ちで絞り込む">
+              <option value="">すべての気持ち</option>
+            </select>
+          </label>
+          <label class="filter-field">
+            <span class="sr-only">タグで絞り込む</span>
+            <select id="entry-tag-filter" aria-label="タグで絞り込む">
+              <option value="">すべてのタグ</option>
+            </select>
           </label>
         </div>
         <div class="card-list" id="entry-list" aria-live="polite"></div>

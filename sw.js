@@ -1,4 +1,4 @@
-const CACHE_NAME = "kotoba-no-tane-v5";
+const CACHE_NAME = "kotoba-no-tane-v6";
 const APP_SHELL = [
   "./",
   "./index.html",

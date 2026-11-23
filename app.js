@@ -56,6 +56,8 @@ const elements = {
   entrySubmit: document.querySelector("#entry-submit"),
   entryCancel: document.querySelector("#entry-cancel"),
   entrySearch: document.querySelector("#entry-search"),
+  entryMoodFilter: document.querySelector("#entry-mood-filter"),
+  entryTagFilter: document.querySelector("#entry-tag-filter"),
   entryList: document.querySelector("#entry-list"),
   entryEmpty: document.querySelector("#entry-empty"),
   ideaForm: document.querySelector("#idea-form"),
@@ -278,18 +280,47 @@ async function renderEntries() {
     const dateOrder = String(b.date).localeCompare(String(a.date));
     return dateOrder || String(b.updatedAt).localeCompare(String(a.updatedAt));
   });
+  updateEntryFilters(entries);
   const query = elements.entrySearch.value.trim().toLocaleLowerCase();
+  const selectedMood = elements.entryMoodFilter.value;
+  const selectedTag = elements.entryTagFilter.value;
   const filtered = entries.filter((entry) => {
     const searchable = [entry.text, entry.mood, entry.metaphor, ...(entry.tags || [])]
       .filter(Boolean).join(" ").toLocaleLowerCase();
-    return searchable.includes(query);
+    return searchable.includes(query)
+      && (!selectedMood || entry.mood === selectedMood)
+      && (!selectedTag || (entry.tags || []).includes(selectedTag));
   });
   elements.entryList.innerHTML = filtered.map(entryCard).join("");
   elements.entryEmpty.classList.toggle("is-visible", filtered.length === 0);
-  elements.entryEmpty.textContent = query && entries.length
+  const hasFilters = query || selectedMood || selectedTag;
+  elements.entryEmpty.textContent = hasFilters && entries.length
     ? "検索条件に合う記録はありません。"
     : "まだ記録はありません。最初のひとことを残してみましょう。";
   await renderSourceOptions(entries);
+}
+
+function updateEntryFilters(entries) {
+  const selectedMood = elements.entryMoodFilter.value;
+  const selectedTag = elements.entryTagFilter.value;
+  const moods = [...new Set(entries.map((entry) => entry.mood).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, "ja"));
+  const tags = [...new Set(entries.flatMap((entry) => entry.tags || []).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, "ja"));
+
+  elements.entryMoodFilter.innerHTML = `<option value="">すべての気持ち</option>${moods.map((mood) => `
+    <option value="${escapeHtml(mood)}">${escapeHtml(mood)}</option>
+  `).join("")}`;
+  elements.entryTagFilter.innerHTML = `<option value="">すべてのタグ</option>${tags.map((tag) => `
+    <option value="${escapeHtml(tag)}">${escapeHtml(tag)}</option>
+  `).join("")}`;
+
+  if (moods.includes(selectedMood)) {
+    elements.entryMoodFilter.value = selectedMood;
+  }
+  if (tags.includes(selectedTag)) {
+    elements.entryTagFilter.value = selectedTag;
+  }
 }
 
 async function renderSourceOptions(entries) {
@@ -642,6 +673,12 @@ async function initialize() {
     elements.ideaPattern.addEventListener("change", updatePatternHint);
     elements.patternInsert.addEventListener("click", insertPatternTemplate);
     elements.entrySearch.addEventListener("input", () => {
+      renderEntries().catch((error) => console.error(error));
+    });
+    elements.entryMoodFilter.addEventListener("change", () => {
+      renderEntries().catch((error) => console.error(error));
+    });
+    elements.entryTagFilter.addEventListener("change", () => {
       renderEntries().catch((error) => console.error(error));
     });
     elements.ideaSearch.addEventListener("input", () => {
