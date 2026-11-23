@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "ことばのたね",
+  "short_name": "ことばのたね",
+  "description": "日々の気持ちや気づきを記録し、自分の言葉で発信のタネに育てます。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f3ed",
+  "theme_color": "#f6f3ed",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
