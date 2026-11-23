@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f6f3ed">
+    <meta name="description" content="日々の気持ちや気づきを記録し、自分の言葉で発信のタネに育てるアプリです。">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icon.svg">
+    <link rel="stylesheet" href="./styles.css">
+    <title>ことばのたね</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="ことばのたね ホーム">
+        <span class="brand-mark" aria-hidden="true">芽</span>
+        <span>ことばのたね</span>
+      </a>
+      <button class="button button-quiet" id="backup-button" type="button">バックアップ</button>
+    </header>
+
+    <main class="layout">
+      <section class="intro">
+        <p class="eyebrow">YOUR THOUGHTS, YOUR WORDS</p>
+        <h1>心に浮かんだことを、<br>自分の言葉で残そう。</h1>
+        <p class="intro-copy">記録はこの端末の中に保存されます。発信のアイデアは、残したいものだけ保存できます。</p>
+      </section>
+
+      <nav class="tabs" aria-label="メインメニュー">
+        <button class="tab is-active" type="button" data-view="journal-view" aria-selected="true">日々の記録</button>
+        <button class="tab" type="button" data-view="ideas-view" aria-selected="false">発信アイデア</button>
+        <button class="tab" type="button" data-view="data-view" aria-selected="false">データ管理</button>
+      </nav>
+
+      <section class="view is-visible" id="journal-view" aria-labelledby="journal-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">JOURNAL</p>
+            <h2 id="journal-heading">今日の気持ちを記録する</h2>
+          </div>
+        </div>
+
+        <form class="panel entry-form" id="entry-form">
+          <input id="entry-id" type="hidden">
+          <label class="field">
+            <span>思ったこと・感じたこと <b class="required">必須</b></span>
+            <textarea id="entry-text" rows="5" maxlength="10000" placeholder="まとまっていなくても大丈夫。今の気持ちをそのまま書いてみましょう。" required></textarea>
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>今の気持ち <small>任意</small></span>
+              <select id="entry-mood">
+                <option value="">選択しない</option>
+                <option>うれしい</option>
+                <option>安心</option>
+                <option>わくわく</option>
+                <option>感謝</option>
+                <option>落ち着かない</option>
+                <option>不安</option>
+                <option>悲しい</option>
+                <option>怒り</option>
+                <option>疲れた</option>
+                <option>もやもや</option>
+                <option>その他</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>タグ <small>任意・読点またはカンマで区切る</small></span>
+              <input id="entry-tags" type="text" maxlength="200" placeholder="仕事、人間関係">
+            </label>
+          </div>
+          <label class="field">
+            <span>もし何かにたとえるなら？ <small>任意</small></span>
+            <textarea id="entry-metaphor" rows="2" maxlength="2000" placeholder="天気、道、荷物、料理など、思いついたものがあれば。"></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="button button-primary" id="entry-submit" type="submit">記録を保存</button>
+            <button class="button button-quiet is-hidden" id="entry-cancel" type="button">編集をやめる</button>
+          </div>
+        </form>
+
+        <div class="list-heading">
+          <h2>これまでの記録</h2>
+          <label class="search-field">
+            <span class="sr-only">記録を検索</span>
+            <input id="entry-search" type="search" placeholder="記録を検索">
+          </label>
+        </div>
+        <div class="card-list" id="entry-list" aria-live="polite"></div>
+        <p class="empty-state" id="entry-empty">まだ記録はありません。最初のひとことを残してみましょう。</p>
+      </section>
+
+      <section class="view" id="ideas-view" aria-labelledby="ideas-heading" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">IDEA BOOK</p>
+            <h2 id="ideas-heading">発信のタネを育てる</h2>
+          </div>
+        </div>
+        <p class="section-copy">記録から見つけた気づきを、自分の言葉でアイデアに。保存したものだけがここに残ります。</p>
+
+        <form class="panel idea-form" id="idea-form">
+          <input id="idea-id" type="hidden">
+          <label class="field">
+            <span>アイデアのタイトル <b class="required">必須</b></span>
+            <input id="idea-title" type="text" maxlength="160" placeholder="例：休むことに罪悪感があるのはなぜ？" required>
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>話し方の型 <small>任意</small></span>
+              <select id="idea-pattern">
+                <option value="">型を選ぶ</option>
+                <option value="hook">冒頭インパクト型</option>
+                <option value="pitch">エレベーターピッチ型</option>
+                <option value="reframe">あるある → 見方の転換型</option>
+                <option value="question">体験 → 問いかけ型</option>
+                <option value="redefine">思い込みの再定義型</option>
+                <option value="translate">感情の翻訳型</option>
+                <option value="analogy">たとえ話型</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>もとになった記録 <small>任意</small></span>
+              <select id="idea-source">
+                <option value="">選択しない</option>
+              </select>
+            </label>
+          </div>
+          <div class="pattern-helper">
+            <p id="pattern-hint">型を選ぶと、話の組み立て方のヒントが表示されます。</p>
+            <button class="text-button" id="pattern-insert" type="button">型のひな形をメモに入れる</button>
+          </div>
+          <label class="field">
+            <span>届けたい相手・気づき・話のメモ <b class="required">必須</b></span>
+            <textarea id="idea-text" rows="5" maxlength="8000" placeholder="誰に、どんな視点を届けたいか。話の骨組みや、使いたいたとえを書いておきましょう。" required></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="button button-primary" id="idea-submit" type="submit">アイデアを保存</button>
+            <button class="button button-quiet is-hidden" id="idea-cancel" type="button">編集をやめる</button>
+          </div>
+        </form>
+
+        <div class="list-heading">
+          <h2>保存したアイデア</h2>
+          <label class="search-field">
+            <span class="sr-only">アイデアを検索</span>
+            <input id="idea-search" type="search" placeholder="アイデアを検索">
+          </label>
+        </div>
+        <div class="card-list" id="idea-list" aria-live="polite"></div>
+        <p class="empty-state" id="idea-empty">保存したアイデアはまだありません。</p>
+      </section>
+
+      <section class="view" id="data-view" aria-labelledby="data-heading" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">YOUR DATA</p>
+            <h2 id="data-heading">データ管理</h2>
+          </div>
+        </div>
+        <div class="panel data-panel">
+          <h3>バックアップを書き出す</h3>
+          <p>すべての記録と、保存した発信アイデアを1つのファイルにまとめます。新しい端末で復元するときに使えます。</p>
+          <button class="button button-primary" id="export-button" type="button">バックアップを保存</button>
+        </div>
+        <div class="panel data-panel">
+          <h3>バックアップを読み込む</h3>
+          <p>以前に書き出したJSONバックアップを読み込みます。統合では、同じ項目が両方にある場合はこの端末のデータを優先します。</p>
+          <label class="button button-secondary file-button">
+            バックアップファイルを選択
+            <input id="import-file" type="file" accept="application/json,.json">
+          </label>
+          <p class="fine-print">バックアップには個人的な記録が含まれます。保存先や共有先にご注意ください。</p>
+        </div>
+        <div class="panel data-panel">
+          <h3>このアプリの保存について</h3>
+          <p>記録はこのブラウザの端末内に保存され、アプリの運営者や他の利用者には送信されません。ブラウザのデータ削除や端末の故障に備え、必要に応じてバックアップを書き出してください。</p>
+          <p class="fine-print">この初期版は同期・クラウド保存・AI生成を行いません。</p>
+        </div>
+        <details class="panel install-guide">
+          <summary>iPhoneのホーム画面に追加する方法</summary>
+          <ol>
+            <li>Safariでこのアプリのページを開きます。</li>
+            <li>共有ボタンをタップします。</li>
+            <li>「ホーム画面に追加」を選び、追加します。</li>
+          </ol>
+        </details>
+      </section>
+    </main>
+
+    <dialog id="import-dialog" class="import-dialog">
+      <form method="dialog">
+        <p class="eyebrow">RESTORE BACKUP</p>
+        <h2>読み込み方法を選んでください</h2>
+        <p id="import-summary"></p>
+        <div class="dialog-actions">
+          <button class="button button-secondary" value="cancel">キャンセル</button>
+          <button class="button button-secondary" id="merge-button" type="button">統合する</button>
+          <button class="button button-danger" id="replace-button" type="button">置き換える</button>
+        </div>
+        <p class="fine-print">統合：バックアップにだけある項目を追加します。同じIDの項目が両方にある場合は、現在の端末側を残します。</p>
+        <p class="fine-print">置き換えると、現在この端末にあるデータは削除され、バックアップの内容だけになります。</p>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <footer class="footer">あなたの気持ちを、あなたのペースで。</footer>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
